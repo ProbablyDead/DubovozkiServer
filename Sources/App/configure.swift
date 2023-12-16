@@ -3,10 +3,15 @@ import Ferno
 
 // configures your application
 public func configure(_ app: Application) async throws {
-    let configPath = app.directory.resourcesDirectory.appending("firebase-adminsdk.json")
-    let configData = try Data(contentsOf: URL(fileURLWithPath: configPath))
+    // ferno config
+    let fernoConfiguration = FernoDefaultConfiguration(
+        basePath: "https://dubki-app-default-rtdb.firebaseio.com",
+        email: "firebase-adminsdk-40kp7@dubki-app.iam.gserviceaccount.com",
+        privateKey: ProcessInfo.processInfo.environment["PRIVATE_KEY"] ?? ""
+    )
     
-    let fernoConfiguration = try FernoServiceJsonConfiguration(json: configData)
+    // apply config
+    app.ferno.use(.default(fernoConfiguration))
     
     // register routes
     try routes(app)

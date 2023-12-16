@@ -6,8 +6,10 @@
 //
 
 import Vapor
+// type alias for request body
 typealias Body = [String: String]
 
+// MARK: - SendRequest function, returns response
 private func sendRequest(requestType: RequestType, req: Request) throws -> EventLoopFuture<String> {
     let user: User = try req.content.decode(User.self)
     let content: Body = requestType.getRequestBody(user: user)
@@ -37,6 +39,7 @@ private func sendRequest(requestType: RequestType, req: Request) throws -> Event
     }
 }
 
+// MARK: - signIn handler
 func signIn(req: Request) throws -> EventLoopFuture<String> {
     do {
         return try sendRequest(requestType: RequestType.signIn, req: req)
@@ -45,6 +48,7 @@ func signIn(req: Request) throws -> EventLoopFuture<String> {
     }
 }
 
+// MARK: - signUp handler
 func signUp(req: Request) throws -> EventLoopFuture<String> {
     do {
         return try sendRequest(requestType: RequestType.signUp, req: req)
@@ -53,6 +57,7 @@ func signUp(req: Request) throws -> EventLoopFuture<String> {
     }
 }
 
+// MARK: - reset password handler
 func resetPassword(req: Request) throws -> EventLoopFuture<String> {
     do {
         return try sendRequest(requestType: RequestType.resetPassword, req: req)
@@ -61,11 +66,13 @@ func resetPassword(req: Request) throws -> EventLoopFuture<String> {
     }
 }
 
+// MARK: - User struct
 private struct User: Content {
     let email: String
     let password: String?
 }
 
+// MARK: - Assembling request enum
 private enum RequestType: String {
     static let adress: String = "https://identitytoolkit.googleapis.com/v1/accounts:"
     static let key: String = {
@@ -99,6 +106,7 @@ private enum RequestType: String {
     }
 }
 
+//MARK: - Names of request's body parameters 
 private enum BodyParametersNames {
     static let contentType: String = "Content-Type"
     static let contentTypeValue: String = "application/json"
