@@ -30,11 +30,11 @@ private func sendRequest(requestType: RequestType, req: Request) throws -> Event
             do {
                 return req.eventLoop.future(try response.content.decode(AuthResponse.self).idToken)
             } catch {
-                return req.eventLoop.future(error: Abort(.badRequest, reason: "Failure decoding"))
+                return req.eventLoop.makeFailedFuture(Abort(.badRequest, reason: "Failure decoding"))
             }
             
         } else {
-            return req.eventLoop.future(error: Abort(response.status, reason: response.description))
+            return req.eventLoop.makeFailedFuture(Abort(response.status, reason: response.description))
         }
     }
 }
